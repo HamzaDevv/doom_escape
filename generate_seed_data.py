@@ -138,18 +138,25 @@ class Synthesis:
             ],
             "response_format": {"type": "json_object"}, "max_tokens": tokens,
         }
-        if self.model in ("deepseek-flash", "deepseek-v4-pro", "deepseek-v4-flash"):
+        host = (urlsplit(self.base_url).hostname or "").lower()
+        if host == "deploy.com" or host.endswith(".deploy.com"):
+            payload.pop("response_format")
+            payload["max_completion_tokens"] = payload.pop("max_tokens")
+            payload["reasoning_effort"] = "none"
+        elif self.model in ("deepseek-flash", "deepseek-v4-pro", "deepseek-v4-flash"):
             payload["thinking"] = {"type": "disabled"}
         async with self.limit:
             response = await self.client.post(self.base_url + "/chat/completions", json=payload)
         if response.status_code in (408, 425, 429) or response.status_code >= 500:
             raise Retryable(f"HTTP {response.status_code}")
         if not response.is_success:
-            raise APIError(f"DeepSeek rejected the request (HTTP {response.status_code}). Check key and model.")
+            raise APIError(f"Upstream API rejected the request (HTTP {response.status_code}). Check key and model.")
         choice = response.json()["choices"][0]
         if choice["finish_reason"] != "stop":
             raise ValueError("incomplete JSON response")
-        return json.loads(choice["message"]["content"])
+        content = choice["message"]["content"].strip()
+        fenced = re.fullmatch(r"```(?:json)?\s*(.*?)\s*```", content, flags=re.DOTALL | re.IGNORECASE)
+        return json.loads(fenced.group(1) if fenced else content)
 
     async def item(self, kind, slot):
         for attempt in range(7):

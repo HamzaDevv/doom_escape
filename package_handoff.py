@@ -65,7 +65,7 @@ flowchart LR
 
 ## Reproduce on an A100
 
-With the Colab notebook, connect to an A100 runtime, use the hidden DeepSeek key prompt,
+With the Colab notebook, connect to an A100 runtime, use the hidden Deploy secret key prompt,
 and run all cells in order. The notebook clones this repository and checks every stage.
 For CLI reproduction, use the tracked source in a fresh directory and run these commands.
 The generator also accepts the tracked, checksummed data when it is present.
@@ -84,8 +84,9 @@ bash render_demo_video.sh
 .venv/bin/python package_handoff.py
 ```
 
-The default upstream model is `deepseek-flash`. To override it set
-`DEEPSEEK_MODEL` and optionally `DEEPSEEK_BASE_URL` in the environment.
+The notebook uses Deploy’s `deepseek-ai/deepseek-v4.1-flash` model. The CLI
+defaults to the direct DeepSeek API. To override the CLI model and endpoint, set
+`DEEPSEEK_MODEL` and `DEEPSEEK_BASE_URL` in the environment.
 The recorded adapter checkpoint incorporates stochastic local exploration.
 For a fresh run, use a new run directory. The archive includes the tracked source,
 datasets, adapter checkpoints and outputs. `workspace/dependencies.txt` records
