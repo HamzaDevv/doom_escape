@@ -65,17 +65,14 @@ flowchart LR
 
 ## Reproduce on an A100
 
-With the Colab notebook, connect to an A100 runtime, use the hidden Deploy secret key prompt,
-and run all cells in order. The notebook clones this repository and checks every stage.
+With the Colab notebook, connect to an A100 runtime and run all cells in order.
+The committed dataset is locked and requires no API key. The notebook clones this repository and checks every stage.
 For CLI reproduction, use the tracked source in a fresh directory and run these commands.
 The generator also accepts the tracked, checksummed data when it is present.
 
 ```bash
 bash setup_env.sh
-read -rsp 'DeepSeek API key: ' DEEPSEEK_API_KEY
-printf '\\n'
-DEEPSEEK_API_KEY="$DEEPSEEK_API_KEY" .venv/bin/python generate_seed_data.py
-unset DEEPSEEK_API_KEY
+.venv/bin/python generate_seed_data.py
 .venv/bin/python seed_lora.py
 .venv/bin/python swarm_runtime.py
 .venv/bin/python record_run.py
@@ -84,9 +81,8 @@ bash render_demo_video.sh
 .venv/bin/python package_handoff.py
 ```
 
-The notebook uses Deploy’s `deepseek-ai/deepseek-v4.1-flash` model. The CLI
-defaults to the direct DeepSeek API. To override the CLI model and endpoint, set
-`DEEPSEEK_MODEL` and `DEEPSEEK_BASE_URL` in the environment.
+The locked dataset was generated with Deploy’s `deepseek-ai/deepseek-v4.1-flash` model.
+The dataset manifest records its provenance and checksums.
 The recorded adapter checkpoint incorporates stochastic local exploration.
 For a fresh run, use a new run directory. The archive includes the tracked source,
 datasets, adapter checkpoints and outputs. `workspace/dependencies.txt` records

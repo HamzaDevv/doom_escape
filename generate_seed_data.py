@@ -50,6 +50,7 @@ def seed_prompt(slot):
         f"planning emphasis: {constraint}. Produce a single JSON object with keys "
         '"problem" (a brief public task requiring def solve(...)) and "plan". The plan follows '
         f"this contract: {PLAN_SYSTEM} Vary port ordering and use task-specific hints. "
+        "The thought must be at most 150 characters, and each focus hint at most 120 characters. "
         "Include no solution, answers, hidden tests, or tools. Use plain English and ASCII."
     )
 

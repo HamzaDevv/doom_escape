@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "upstream_model": "deepseek-ai/deepseek-v4.1-flash",
+  "sha256": {
+    "seed_dataset.jsonl": "00a983818d46e4d2d0fd15c34e7647601b24f40283b02f4bddb65e10d70a02da",
+    "synthetic_tasks.jsonl": "0fd14f752d435b09c1dca2815050aaf2a1bc384d3eedb7ca9e4908ca33f65fe5"
+  },
+  "seed_rows": 80,
+  "explore_tasks": 20,
+  "held_out_tasks": 10,
+  "upstream_provider": "Deploy",
+  "curation": {
+    "reference_verification": "Linux seccomp subprocess, all cases",
+    "case_review": "Separate DeepSeek completion per task, with manual review of flagged cases",
+    "manual_adjustment": "task-06 output changed to sorted integer pairs and reverified in the sandbox",
+    "split": "20 exploration tasks and 10 held-out tasks on distinct assigned topics"
+  }
+}

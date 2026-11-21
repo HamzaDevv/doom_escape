@@ -19,6 +19,7 @@ SEED = 3407
 CONTEXT = 2048
 MAX_CODE_TOKENS = 420
 TRACE_TARGET = 24
+DATASET_MANIFEST_SHA256 = "ac1c3fa5cd4ec6106f0149803be1cb1b6adbd3abeb35c117d4e01da1c3efac8c"
 CORE_MODULES = ("q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj")
 
 PLAN_SYSTEM = (
@@ -139,6 +140,8 @@ def adapter_fingerprint(path):
 
 def load_datasets():
     manifest_path = WORKSPACE / "dataset_manifest.json"
+    if digest(manifest_path) != DATASET_MANIFEST_SHA256:
+        raise ValueError("Dataset lock mismatch. Use the dataset committed with this project.")
     manifest = read_json(manifest_path)
     if manifest.get("schema") != 1:
         raise ValueError("Unsupported dataset manifest. Use a fresh run directory.")
